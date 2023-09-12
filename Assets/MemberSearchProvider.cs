@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using JetBrains.Annotations;
 using Unity.QuickSearch;
 using UnityEditor;
@@ -14,7 +13,7 @@ public static class MemberSearchProvider
 {
 	private const string                               providerId  = "member";
 	private const string                               displayName = "Member";
-	private const string                               filterId    = "\\";
+	private const string                               filterId    = "\\:";
 	private static        QueryEngine<Component>   queryEngine;
 
 	[UsedImplicitly, SearchItemProvider]
