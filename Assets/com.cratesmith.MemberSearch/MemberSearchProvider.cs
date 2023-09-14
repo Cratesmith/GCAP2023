@@ -145,19 +145,14 @@ public static class MemberSearchProvider
 	{
 		var splits = _context.searchQuery.Split(' ');
 		var blankSearch = string.IsNullOrWhiteSpace(_context.searchQuery);
-		var source = Selection.gameObjects.Length > 0
-			? Selection.gameObjects
-			: PrefabStageUtility.GetCurrentPrefabStage() 
-				? new[] {PrefabStageUtility.GetCurrentPrefabStage().prefabContentsRoot}
-				:new GameObject[0];
-					
-		var process = source
+
+		var process = GetSelectedGameObjects()
 			.SelectMany(x => _includeChildren ? x.GetComponentsInChildren<Component>(true) : x.GetComponents<Component>())
 			.Distinct()
 			.Where(x => x)
 			.Select(x => (component: x, path: GetPath(x)))
-			.Select(x => (x.component, x.path, score: GetScore(x.component, x.path, splits)))
-			.Where(x => blankSearch || x.score >= 0)
+			.Select(x => (x.component, x.path, score: blankSearch ? 0:GetScore(x.component, x.path, splits)))
+			.Where(x => x.score >= 0)
 			.Select(x => _provider.CreateItem(_context,
 			                                  x.component.GetInstanceID().ToString(),
 			                                  -x.score,
@@ -171,7 +166,15 @@ public static class MemberSearchProvider
 			yield return null;
 		}
 	}
-	
+	static GameObject[] GetSelectedGameObjects()
+	{
+		return Selection.gameObjects.Length > 0
+			? Selection.gameObjects
+			: PrefabStageUtility.GetCurrentPrefabStage() 
+				? new[] {PrefabStageUtility.GetCurrentPrefabStage().prefabContentsRoot}
+				:new GameObject[0];
+	}
+
 	private static void StartDrag(SearchItem item, SearchContext context)
 	{
 		DragAndDrop.PrepareStartDrag();
