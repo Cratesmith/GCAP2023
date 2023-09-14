@@ -61,13 +61,13 @@ public static class MemberSearchProvider
 
 	[UsedImplicitly, SearchItemProvider]
 	static SearchProvider CreateProviderSingle()
-		=> CreateProvider(false);
+		=> BuildProvider(false);
 
 	[UsedImplicitly, SearchItemProvider]
 	static SearchProvider CreateProviderWithChildren()
-		=> CreateProvider(true);
+		=> BuildProvider(true);
 	
-	static SearchProvider CreateProvider(bool _includeChildren)
+	static SearchProvider BuildProvider(bool _includeChildren)
 	{
 		return new SearchProvider(_includeChildren ? providerWithChildrenId: providerId,
 		                          _includeChildren ? displayNameWithChildren:displayName)
