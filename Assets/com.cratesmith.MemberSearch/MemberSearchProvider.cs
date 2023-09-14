@@ -78,37 +78,7 @@ public static class MemberSearchProvider
 			showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
 			fetchItems = (context, items, provider) =>
 			{
-				IEnumerable _FetchRoutine()
-				{
-					var splits = context.searchQuery.Split(' ');
-					var blankSearch = string.IsNullOrWhiteSpace(context.searchQuery);
-					var source = Selection.gameObjects.Length > 0
-						? Selection.gameObjects
-						: PrefabStageUtility.GetCurrentPrefabStage() 
-							? new[] {PrefabStageUtility.GetCurrentPrefabStage().prefabContentsRoot}
-							:new GameObject[0];
-					
-					var process = source
-						.SelectMany(x => _includeChildren ? x.GetComponentsInChildren<Component>(true) : x.GetComponents<Component>())
-						.Distinct()
-						.Where(x => x)
-						.Select(x => (component: x, path: GetPath(x)))
-						.Select(x => (x.component, x.path, score: GetScore(x.component, x.path, splits)))
-						.Where(x => blankSearch || x.score >= 0)
-						.Select(x => provider.CreateItem(context,
-						                                 x.component.GetInstanceID().ToString(),
-						                                 -x.score,
-						                                 $"{x.component.GetType().Name}",
-						                                 x.path,
-						                                 null,
-						                                 x.component));
-					foreach (var item in process)
-					{
-						items.Add(item);
-						yield return null;
-					}
-				}
-				return _FetchRoutine();
+				return _FetchRoutine(context, items, provider, _includeChildren);
 			},
 			toObject = (item, type) => item.data as Object,
 			startDrag = (item, context) => StartDrag(item, context),
