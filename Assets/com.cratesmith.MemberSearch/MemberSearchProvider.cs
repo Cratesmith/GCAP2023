@@ -141,6 +141,37 @@ public static class MemberSearchProvider
 		return path;
 	}
 	
+	private static IEnumerable _FetchRoutine(SearchContext _context, List<SearchItem> _items, SearchProvider _provider, bool _includeChildren)
+	{
+		var splits = _context.searchQuery.Split(' ');
+		var blankSearch = string.IsNullOrWhiteSpace(_context.searchQuery);
+		var source = Selection.gameObjects.Length > 0
+			? Selection.gameObjects
+			: PrefabStageUtility.GetCurrentPrefabStage() 
+				? new[] {PrefabStageUtility.GetCurrentPrefabStage().prefabContentsRoot}
+				:new GameObject[0];
+					
+		var process = source
+			.SelectMany(x => _includeChildren ? x.GetComponentsInChildren<Component>(true) : x.GetComponents<Component>())
+			.Distinct()
+			.Where(x => x)
+			.Select(x => (component: x, path: GetPath(x)))
+			.Select(x => (x.component, x.path, score: GetScore(x.component, x.path, splits)))
+			.Where(x => blankSearch || x.score >= 0)
+			.Select(x => _provider.CreateItem(_context,
+			                                  x.component.GetInstanceID().ToString(),
+			                                  -x.score,
+			                                  $"{x.component.GetType().Name}",
+			                                  x.path,
+			                                  null,
+			                                  x.component));
+		foreach (var item in process)
+		{
+			_items.Add(item);
+			yield return null;
+		}
+	}
+	
 	private static void StartDrag(SearchItem item, SearchContext context)
 	{
 		DragAndDrop.PrepareStartDrag();
