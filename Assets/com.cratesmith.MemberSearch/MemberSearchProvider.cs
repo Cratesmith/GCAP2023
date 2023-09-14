@@ -2,44 +2,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using JetBrains.Annotations;
 using Unity.QuickSearch;
 using UnityEditor;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 public static class MemberSearchProvider 
 {
-	private const string                               type        = "member";
+	private const string                               providerId  = "member";
 	private const string                               displayName = "Member";
-	private const string                               filterId    = "\\";
+	private const string                               filterId    = "\\:";
 	private static        QueryEngine<Component>   queryEngine;
 
-	[SearchItemProvider]
+	[UsedImplicitly, SearchItemProvider]
 	static SearchProvider CreateProvider()
 	{
-		return new SearchProvider(type, displayName)
+		return new SearchProvider(providerId, displayName)
 		{
-			priority = 10,
 			filterId = filterId,
 			showDetails = true,
-			showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Description | ShowDetailsOptions.Actions | ShowDetailsOptions.Preview,
-
+			showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
 			fetchItems = (context, items, provider) =>
 			{
 				var splits = context.searchQuery.Split(' ');
+				var blankSearch = string.IsNullOrWhiteSpace(context.searchQuery);
 				items.AddRange(Selection.gameObjects
 					               .SelectMany(x => x.GetComponentsInChildren<Component>())
 					               .Select(x=>(component:x, path:GetPath(x)))
-					               .Where(x=>splits.Any(y=>x.path.IndexOf(y, StringComparison.CurrentCultureIgnoreCase)>=0))
-					               .Select(x => provider.CreateItem(context, x.component.GetInstanceID().ToString(), x.GetType().Name, x.path, GetIconForObject(x.component), x.component)));
+					               .Select(x=>(component:x.component, path:x.path, score:GetScore(x.component, x.path,splits)))
+					               .Where(x=> blankSearch || x.score>=0)
+					               .Select(x => provider.CreateItem(context, 
+					                                                x.component.GetInstanceID().ToString(), 
+					                                                -x.score,
+					                                                $"{x.component.GetType().Name}", 
+					                                                x.path, 
+					                                                GetIconForObject(x.component),
+					                                                x.component)));
 				return null;
 			},
-			fetchThumbnail = (_item, _context) =>  _item.data is Object o ? GetIconForObject(o):null,
 			toObject = (item, type) => item.data as Object,
+			startDrag = (item, context) => StartDrag(item, context),
+
 		};
 	}
 	
+	static int GetScore(Component _component, string _path, string[] _splits)
+	{
+		int score = -1;
+		const int typeMatch = 10;
+		const int pathMatch = 1;
+		foreach (var s in _splits)
+		{
+			if (string.IsNullOrWhiteSpace(s))
+				continue;
+			
+			if (_component.GetType().Name.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+			{
+				score = Mathf.Max(0, score);
+				score += typeMatch * s.Length;
+			}
+
+			if (_path.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+			{
+				score = Mathf.Max(0, score);
+				score += pathMatch * s.Length;
+			}
+		}
+		return score;
+	}
+
 	static string GetPath(Component _component)
 	{
 		var current = _component.transform;
@@ -51,14 +84,35 @@ public static class MemberSearchProvider
 		}
 		return path;
 	}
+	
+	private static void StartDrag(SearchItem item, SearchContext context)
+	{
+		DragAndDrop.PrepareStartDrag();
+		DragAndDrop.objectReferences = new[]{item.data as Object};
+		DragAndDrop.StartDrag(item.label);
+	}
 
-	[SearchActionsProvider]
+	[SearchActionsProvider,UsedImplicitly]
 	static IEnumerable<SearchAction> CreateActionHandlers()
 	{
 		return new[]
 		{
-			new SearchAction(type, "open", null, "Open asset...", OpenItem)
+			new SearchAction(providerId, "open", null, "Open asset...", OpenItem)
 		};
+	}
+	
+	[UsedImplicitly, Shortcut("Help/Quick Search/Quick Search",KeyCode.Backslash, ShortcutModifiers.Alt)]
+	private static void PopQuickSearch()
+	{
+		if (Selection.activeGameObject)
+		{
+			// Open Search with only the "Asset" provider enabled.
+			var qs = QuickSearch.OpenWithContextualProvider(new[]
+			{
+				providerId
+			});	
+			qs.SetSearchText(" ");
+		} 
 	}
 	
 	static void OpenItem(SearchItem _obj)
@@ -71,15 +125,15 @@ public static class MemberSearchProvider
 	static Texture2D GetIconForObject(Object forObject)
 	{
 		if (forObject == null)
-		{						
 			return null;
-		}
 
 		if (forObject is ScriptableObject || forObject is MonoBehaviour || forObject is GameObject || forObject is MonoScript)
 		{
 			var ty = typeof(EditorGUIUtility);
 			var mi = ty.GetMethod("GetIconForObject", BindingFlags.NonPublic | BindingFlags.Static);
-			return mi.Invoke(null, new object[] { forObject }) as Texture2D;			
+			var icon = mi.Invoke(null, new object[] { forObject }) as Texture2D;
+			if (forObject is MonoBehaviour && !icon)
+				return EditorGUIUtility.FindTexture("cs Script Icon");
 		}
 
 		return (Texture2D)EditorGUIUtility.ObjectContent(forObject, typeof(Mesh)).image;
