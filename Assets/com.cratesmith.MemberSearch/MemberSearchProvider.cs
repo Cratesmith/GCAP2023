@@ -59,19 +59,13 @@ public static class MemberSearchProvider
 		}
 	}
 
-	public static class Single
-	{
-		[UsedImplicitly, SearchItemProvider]
-		static SearchProvider CreateProvider()
-			=> MemberSearchProvider.CreateProvider(false);
-	}
+	[UsedImplicitly, SearchItemProvider]
+	static SearchProvider CreateProviderSingle()
+		=> CreateProvider(false);
 
-	public static class WithChildren
-	{
-		[UsedImplicitly, SearchItemProvider]
-		static SearchProvider CreateProviderWithChildren()
-			=> CreateProvider(true);
-	}
+	[UsedImplicitly, SearchItemProvider]
+	static SearchProvider CreateProviderWithChildren()
+		=> CreateProvider(true);
 	
 	static SearchProvider CreateProvider(bool _includeChildren)
 	{
