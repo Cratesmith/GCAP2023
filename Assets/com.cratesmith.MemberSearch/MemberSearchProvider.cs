@@ -20,9 +20,13 @@ using Object = UnityEngine.Object;
 
 public static class MemberSearchProvider 
 {
-	private const  string                 providerId  = "member";
-	private const  string                 displayName = "Member";
-	private const  string                 filterId    = "\\:";
+	private const string providerId  = "components";
+	private const string displayName = "Coponents";
+	private const string filterId    = "\\:";
+
+	private const string displayNameWithChildren = "Components In Children";
+	private const string providerWithChildrenId = "componentsInChildren";
+	private const string filterWithChildrenId   = "\\\\:";
 
 	[InitializeOnLoadMethod]
 	static void InitializeOnLoad()
@@ -55,13 +59,28 @@ public static class MemberSearchProvider
 		}
 	}
 
-	[UsedImplicitly, SearchItemProvider]
+	public static class Single
+	{
+		[UsedImplicitly, SearchItemProvider]
+		static SearchProvider CreateProvider()
+			=> MemberSearchProvider.CreateProvider(false);
+	}
+
+	public static class WithChildren
+	{
+		[UsedImplicitly, SearchItemProvider]
+		static SearchProvider CreateProviderWithChildren()
+			=> CreateProvider(true);
+	}
+	
 	static SearchProvider CreateProvider(bool _includeChildren)
 	{
-		return new SearchProvider(providerId, displayName)
+		return new SearchProvider(_includeChildren ? providerWithChildrenId: providerId,
+		                          _includeChildren ? displayNameWithChildren:displayName)
 		{
-			filterId = filterId,
+			filterId = _includeChildren ? filterWithChildrenId:filterId,
 			showDetails = true,
+			isExplicitProvider = true,
 			showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
 			fetchItems = (context, items, provider) =>
 			{
@@ -197,8 +216,9 @@ public static class MemberSearchProvider
 			// Open Search with only the "Asset" provider enabled.
 			var qs = QuickSearch.OpenWithContextualProvider(new[]
 			{
-				providerId
-			});
+				_includeChildren? providerWithChildrenId:providerId
+			});	
+
 			qs.SetSearchText(" ");
 			#endif
 		} 
