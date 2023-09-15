@@ -210,7 +210,7 @@ namespace ComponentSearch
 			if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
 			{
 			#if UNITY_2021_1_OR_NEWER
-			var context = new SearchContext(new[] { CreateProvider(_includeChildren) }, " ", SearchFlags.Sorted|SearchFlags.NoIndexing|SearchFlags.Synchronous);
+			var context = new SearchContext(new[] { BuildProvider(_includeChildren) }, " ", SearchFlags.Sorted|SearchFlags.NoIndexing|SearchFlags.Synchronous);
 			var state = new SearchViewState(context, SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
 			state.position.width = 900;
 			state.position.height = 550;
