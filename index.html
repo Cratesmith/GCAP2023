@@ -1,0 +1,3769 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/blood.css" id="theme" />
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+# Rip and tear
+## Until the editor is usable again.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Intro
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Foreword
+I wrote much of this talk during the Unity drama. 
+
+Normally preparing talks is something I find easy and love doing, but I really struggled with this one.
+
+I sincerely hope this talk is useful to people. Even if for many of us, our current game could very well be our last in Unity.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Who am I?
+<div class="callout callout-color7">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-bolt" ></i>
+
+
+</div>
+<div class="callout-title-inner">
+
+Kiera Lord  @Cratesmith (@blahaj.zone/bsky/cohost)
+
+</div>
+</div>
+<div class="callout-content">
+
+Programmer (recently @ 5 Lives Studios)
+
+</div>
+</div>
+<!-- .element: style="font-size: 50%" "="true" -->
+
+<split even  >
+<div class="block">
+
+-  PS2/XB: **Destroy All Humans 2**
+ - 360/PS3: **The Dark Knight (Unreleased)**
+ -  Wii: **Next big thing (Unreleased)**
+ -  Web: **Alternator**
+ -  PC/PS3: **Vessel**
+ -  iOS/Droid: **Sim Cell**
+ - iOS/Droid: **Codebreakers**
+</div>
+
+ <!-- .element: style="font-size: 50%" "="true" -->
+
+<div class="block">
+
+-  PC/Mac: **Kinect & VR support for Tail Drift**
+ -  GearVR: **Small**  **(unreleased)**
+ -  Cardboard: **RACQ Bike VR**
+ -  GearVR: **Zombie Nom Nom**
+ -  Switch/PS4/Xbone: **Windbound**
+</div>
+
+ <!-- .element: style="font-size: 50%" "="true" -->
+</split>
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### What to expect from this talk
+#### Part 1. This is an editor hacks talk
+* We'll be focused exclusively on the Unity editor in this talk. 
+* Many solutions covered in this talk are "brittle" and may need fixing or reworking for new Unity versions. 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### What to expect from this talk
+#### Part 2. This talk is about process
+* The examples are more to illustrate the process of how you can and why you should hack the editor.
+* They won't be full 'drop in' solutions. But you'll be able to flesh them out if you need to.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Disclaimer
+#### Part 1
+- The opinions, spicy hot takes and pent up vitrol expressed in this talk are very much my own.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Disclaimer
+#### Part 2
+<div class="block">
+
+* Trans rights are human rights
+* Housing is a right, not a fucking investment
+* There is no such thing as a "good billionaire"
+* Fossil fuels are killing us, stop fucking mining them
+</div>
+
+ <!-- .element: style="font-size: 80%" -->
+
+<div class="callout callout-color7">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-bolt" ></i>
+
+
+</div>
+<div class="callout-title-inner">
+
+And say it with me:
+
+</div>
+</div>
+<div class="callout-content">
+
+### Fuck you John Riccitiello
+
+</div>
+</div>
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Why this rant is happening
+
+#### Part 1. History
+
+* In 2016 I did a talk about how Unity had become harder to use, more confused and less productive. 
+* At the time I was optimistic that things would improve.
+* I was, shall we say "fucking wrong" about that
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Why this rant is happening
+#### Part 2. Where we are now
+* Unity has gotten *MUCH* more difficult to use.
+* Everything is in packages with versioning I can describe as "at best chaotic"
+* New features no longer are "a bit rough", and it's often years before they're even safe to consider using. (if ever)
+* Related: Dots is still a giant marketing wank. 
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Why this rant is happening
+#### Part 3. My thoughts on why we are here 1/3
+* Unity's core business stopped being about games: it's now advertising and other industries (including military). 
+* They don't build full games internally on their engine. (They started to then scrapped that team)
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Why this rant is happening
+#### Part 3. My thoughts on why we are here 2/3
+
+* They went from a small-ish team working on product with clear direction to a workforce of over 7,700.
+* Many of the core senior developers are leaving, citing major disagreements with direction. 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Why this rant is happening
+#### Part 3. My thoughts on why we are here 3/3
+
+* To me, this feels too damn familiar to how Pandemic (the studio) died in a growth spiral when our new CEO merged us with Bioware and then sold us to EA.
+* That new CEO was John "Devs are fucking idiots" Riccitiello, current CEO of Unity
+* He's not solely to blame. But it certainly doesn't seem like the Unity's top brass is working the the best interests of developers.
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### What to expect from this rant
+* My approach to talks is very fast, very technical.
+* I'm aiming for you to get a high level understanding in this talk and then refer to the slides/code/recording after if/when it's relevant to your project.
+* Slides and full source are online (bottom of each slide)
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Easing in to what we're doing and why
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Missing features
+
+* Unity is by and large a good development environment.
+* There are some fucking staggering omissions for key features that any other tool would have shipped with day 1 that are never done.
+* The aim of this talk is to demonstrate that no matter what, if you need a feature present elsewhere, you can add it to Unity.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Lets talk bout Unity Search
+* A great example of this is Unity search.
+* On the surface it covers a key feature, the 'search anywhere/command pallet' feature we use in so many other tools.
+* In practice though it falls so miserably short of that that most people still don't use it.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Lets talk bout Unity Search 2
+* It's a stereotypical 'tested by tech demo' modern Unity feature. Works great in their test but in even a small game it's... kinda rubbish.
+* Fundamentally Unity search doesn't work as the core 'jump to' feature we have in other tools. 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Specifics
+* It also requires you to push a single hotkey and then type or tab which filter you want to stand a chance of getting the result you really want.
+* Finally it misses the critical use case which is "I want to edit this specific component on my current GameObject/Prefab"
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Unity isn't going to fix it
+* If you've used Unity for a decent amount of time you'll know that features are added and forgotten. This is what we're getting.
+* So we need to find our own way around, or fucking fix it ourselves.
+* This talk is about the 'fucking fix it approach', with an emphasis on the process.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Demonstration: Fixing the fucking search.
+<div class="block">
+
+* For my use cases there are several critical failing of Unity search for me.
+* I need need independent hotkeys for project/hierarchy/menu searches. 
+* I need need a search that makes it easy to select & edit individual components on GameObjects & Prefabs
+</div>
+
+ <!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### The easy part
+
+* Fortunately, some of these exist already in Unity and we can just add them in the shortcut tab.
+* That said getting our entire team to do this is cumbersome... so let's automatically fix it from script instead.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Foreword: API compatibility for LTS
+* Frustratingly, Unity has drastically changed the search api between current LTS (2020.3) and newer versions (2021.1+).
+* In 2020 it's an optional package, and in 2021 it's a built in assembly, and the namespace has changed. 
+* So we'll need to use some `#ifdefs` to be compatible with both.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<div class="" style="position: absolute; left: 0%; top: 0%; height: 20%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+### How do I know which version to `#if` on?
+</div>
+
+<div class="" style="position: absolute; left: 0%; top: 20%; height: 80%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+<div class="block">
+
+* You can use the Unity script reference website to check which versions public members exist for.
+  
+* Open the page for the thing you're checking and see which versions it has documentation pages for.
+</div>
+
+ <!-- .element: style="font-size: 90%" -->
+</div>
+
+<div class="" style="position: absolute; left: 50%; top: 20%; height: 80%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Unity documentation version checking.png" alt="" style="object-fit: scale-down">
+
+</div>
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding their shortcuts through code
+
+``` CSharp
+public static class SearchShortcuts
+{
+	[InitializeOnLoadMethod]
+	public static void InitializeOnLoad()
+	{
+#if Unity_2021_1_OR_NEWER
+		RebindIfMissing("Help/Search/Assets", 
+		                new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+		RebindIfMissing("Help/Search/Hierarchy", 
+		                new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+#else
+		RebindIfMissing("Help/Quick Search/Assets", 
+		                new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+		RebindIfMissing("Help/Quick Search/Scene", 
+		                new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+#endif
+	} 
+```
+<!-- .element: style="font-size: 30%" -->
+``` CSharp
+	static void RebindIfMissing(string _bindingId, KeyCombination _keyCombination)
+	{
+		var binding = ShortcutManager.instance.GetShortcutBinding(_bindingId);
+		if (binding.keyCombinationSequence.Count() == 0)
+		{
+			Debug.Log($"Rebinding {_bindingId} to {_keyCombination.ToString()}");
+			var kcQsAssets = new ShortcutBinding(_keyCombination);
+			ShortcutManager.instance.RebindShortcut(_bindingId, kcQsAssets);
+		}
+	}
+}
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding their shortcuts through code 2
+``` CSharp
+static void RebindIfMissing(string _bindingId, KeyCombination _keyCombination)
+{
+	var binding = ShortcutManager.instance.GetShortcutBinding(_bindingId);
+	if (binding.keyCombinationSequence.Count() == 0)
+	{
+		Debug.Log($"Rebinding {_bindingId} to {_keyCombination.ToString()}");
+		var kcQsAssets = new ShortcutBinding(_keyCombination);
+		ShortcutManager.instance.RebindShortcut(_bindingId, kcQsAssets);
+	}
+}
+}
+```
+<!-- .element: style="font-size: 40%" -->
+The ShortcutManager api is pretty sparse, but we can pretty easily just bind an existing shortcut if it's not already assigned 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding their shortcuts through code 3
+
+``` CSharp
+#if Unity_2020_1_OR_NEWER
+	RebindIfMissing("Help/Search/Assets", 
+					new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+	RebindIfMissing("Help/Search/Hierarchy", 
+					new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+#else
+	RebindIfMissing("Help/Quick Search/Assets", 
+					new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+	RebindIfMissing("Help/Quick Search/Scene", 
+					new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+#endif
+```
+<!-- .element: style="font-size: 30%" -->
+<div class="block">
+
+And by doing it in an initialize on load method it'll add them for all our projects
+
+It's all pretty simple so far but... the search I really need isn't here. They didn't implement a provider that covers it.
+</div>
+
+ <!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Unity only builds their features for tech demos
+
+In fact the search providers  they made don't actually solve any new problems
+* We could already search the project and hierarchy using their searchboxes.
+* Menu search is nice to have on all platforms, but it's been present on mac as an OS feature for aeons (alt+? I think)
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### The missing one
+
+When I'm working in IDEs I use "Jump To" shortcuts to get around. But once I'm working on something I rely heavily on "Jump to member"/"Jump within file" ones exclusively.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### The missing one 2
+
+What I'm after is "Jump to component" or "Jump to component in children"
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/ComponentSearch.png" alt="" style="width: 500px; object-fit: fill">
+
+because finding the component I want on complex prefabs is a chore I shouldn't have to do.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### As always: Unity isn't going to fix this for me. 
+
+Unity only implements stuff after someone else has proven it's needed and how to fix it. The best I can hope 
+for is I make this and then they turn around and do it.
+
+(Btw: if you use mecanim state behaviours, you're welcome)
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Building our own search
+
+On the good side, there is public API for adding and using new search providers. On the bad... it's very... 'newnity', it could and should be a lot simpler than it is.
+
+To create our component search we need to
+* Create a new provider that lists all components on the current GameObjects (optionally in children too), and lets us filter them.
+* Bind a shortcut that launches a search with that provider using our preferred view settings (side-inspector, pre-filled searchable list)
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding a provider
+
+``` CSharp
+public static class ComponentSearchProvider
+{
+	private const string componentProviderId           = "components";
+	private const string componentInChildrenProviderId = "componentsInChildren";
+
+	[SearchItemProvider]
+	static SearchProvider CreateProviderSingle() => BuildProvider(false);
+
+	[SearchItemProvider]
+	static SearchProvider CreateProviderWithChildren() => BuildProvider(true);
+```
+<!-- .element: style="font-size: 30%" -->
+``` CSharp
+	static SearchProvider BuildProvider(bool _includeChildren)
+	{
+		(var providerId, var displayName, var filterId) = _includeChildren 
+			? (componentInChildrenProviderId, "Components In Children", "\\\\:") 
+			: (componentProviderId,"Coponents", "\\:");
+		
+		return new SearchProvider(providerId, displayName)
+		{
+			filterId = filterId,
+			showDetails = true,
+			isExplicitProvider = true,
+			showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
+			fetchItems = (context, items, provider) => _FetchRoutine(context, items, provider, _includeChildren),
+			toObject = (item, _) => item.data as Object,
+			startDrag = (item, context) => StartDrag(item, context),
+			fetchThumbnail = (item, _) => GetIconForObject(item.data as Object),
+			trackSelection = (item, _) => EditorGUIUtility.PingObject(item.data as Object),
+#if Unity_2021_1_OR_NEWER
+			actions = {	new SearchAction(componentProviderId, "open", null, "Open asset...", OpenItem) }
+#endif
+		};
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding a provider
+
+``` CSharp
+public static class ComponentSearchProvider
+{
+	private const string componentProviderId           = "components";
+	private const string componentInChildrenProviderId = "componentsInChildren";
+
+	[SearchItemProvider]
+	static SearchProvider CreateProviderSingle() => BuildProvider(false);
+
+	[SearchItemProvider]
+	static SearchProvider CreateProviderWithChildren() => BuildProvider(true);
+```
+<!-- .element: style="font-size: 30%" -->
+The `[SearchItemProvider]` method attribute is used to register providers, which makes them available to to the default search window.
+
+We have two, one for `GetComponent` and `GetComponentInChildren`, but we build one method to make providers for both.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Adding a provider
+``` CSharp
+static SearchProvider BuildProvider(bool _includeChildren)
+{
+	(var providerId, var displayName, var filterId) = _includeChildren 
+		? (componentInChildrenProviderId, "Components In Children", "\\\\:") 
+		: (componentProviderId,"Coponents", "\\:");
+	
+	return new SearchProvider(providerId, displayName)
+	{
+		filterId = filterId,
+		showDetails = true,
+		isExplicitProvider = true,
+		showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
+		fetchItems = (context, items, provider) => FetchItemsRoutine(context, items, provider, _includeChildren),
+		toObject = (item, _) => item.data as Object,
+		startDrag = (item, context) => StartDrag(item, context),
+		fetchThumbnail = (item, _) => GetIconForObject(item.data as Object),
+		trackSelection = (item, _) => EditorGUIUtility.PingObject(item.data as Object),
+#if Unity_2021_1_OR_NEWER
+		actions = {	new SearchAction(componentProviderId, "open", null, "Open asset...", OpenItem) }
+#endif
+	};
+}
+```
+<!-- .element: style="font-size: 30%" -->
+<div class="block">
+
+Most of setting up the provider is providing it with methods to handle its function. `fetchItems`, `toObject` and `actions` (2021.1+) are the required ones, but `fetchThumbnail`, `startDrag` and `trackSelection` make the searchbox more usable.
+
+We also specify some display options, in our case we want an inspector
+</div>
+
+ <!-- .element: style="font-size: 70%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Fetching items
+``` CSharp
+private static IEnumerable FetchItemsRoutine(SearchContext _context, 
+		 List<SearchItem> _items,
+		 SearchProvider _provider,
+		 bool _includeChildren)
+{
+	var splits = _context.searchQuery.Split(' ');
+	var blankSearch = string.IsNullOrWhiteSpace(_context.searchQuery);
+
+	var process = GetSelectedGameObjects()
+		.SelectMany(x => _includeChildren ? x.GetComponentsInChildren<Component>(true) : x.GetComponents<Component>())
+		.Distinct()
+		.Where(x => x)
+		.Select(x => (component: x, path: GetPath(x)))
+		.Select(x => (x.component, x.path, score: blankSearch ? 0 : GetScore(x.component, x.path, splits)))
+		.Where(x => x.score >= 0)
+		.Select(x => _provider.CreateItem(_context,
+										  x.component.GetInstanceID().ToString(),
+										  -x.score,
+										  $"{x.component.GetType().Name}",
+										  x.path,
+										  null,
+										  x.component));
+	foreach (var item in process)
+	{
+		_items.Add(item);
+		yield return null;
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+<div class="block">
+
+`FetchItems` is used to collect all items that match the current search string. 
+
+We use a Linq query to create items from the components we find, yielding between each iteration for better responsiveness.
+</div>
+
+ 
+<!-- .element: style="font-size: 75%" -->
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Scoring items
+``` CSharp
+static int GetScore(Component _component, string[] _splits)
+{
+    int score = -1;
+    const int typeMatch = 5;
+    const int nameMatch = 1;
+    foreach (var s in _splits)
+    {
+        if (string.IsNullOrWhiteSpace(s))
+            continue;
+        var type = _component.GetType();
+        while (type != null)
+        {
+            if (type.Name.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                score = Mathf.Max(0, score);
+                score += typeMatch * s.Length;
+                break;
+            }
+            type = type.BaseType;
+        }
+
+        if (_component.name.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            score = Mathf.Max(0, score);
+            score += nameMatch * s.Length;
+        }
+    }
+    return score;
+}
+```
+<!-- .element: style="font-size: 28%" -->
+<div class="block">
+
+Search items have a score and are sorted in the search results in order of low-high. 
+
+We use our own string split-matching, scoring by the number of matched characters. (This matches both the object name and the typename).
+</div>
+
+ <!-- .element: style="font-size: 70%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Add "open item" action
+``` CSharp
+static void OpenItem(SearchItem _obj)
+{
+#if Unity_2021_1_OR_NEWER
+    EditorApplication.delayCall += () => EditorUtility.OpenPropertyEditor(_obj.data as Object);
+#else
+    var ty = typeof(EditorApplication).Assembly.GetType("UnityEditor.PropertyEditor");
+    var mi = ty.GetMethod("OpenPropertyEditor", BindingFlags.NonPublic | BindingFlags.Static);
+    mi.Invoke(null, new object[] { _obj.data as Object, true });
+#endif
+}
+```
+<!-- .element: style="font-size: 30%" -->
+<div class="block">
+
+Our "Open Item" action is used to open a `PropertyEditor` window (an inspector), with the selected component as it's target.
+
+In 2021.1+ there's a public API method for doing this, but in older versions that method is internal... so we call it by reflection.
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Registering actions (pre 2021.1)
+
+``` CSharp
+#if !Unity_2021_1_OR_NEWER
+[SearchActionsProvider]
+static IEnumerable<SearchAction> CreateActionHandlers()
+{
+	return new[] { new SearchAction(componentProviderId, "open", null,
+		 "Open asset...", OpenItem),
+		new SearchAction(componentInChildrenProviderId, "open", null,
+		 "Open asset...", OpenItem)};
+}
+#endif
+```
+<!-- .element: style="font-size: 40%" -->
+
+<div class="block">
+
+In the older search API, the `[SearchActionsProvider]` method attribute is used to get the list of actions. Because we have two provider Ids we have to register the action once for each.
+
+In 2021.1+ the actions list is a method parameter you set on the `SearchProvider`. Just like fetching items, getting icons etc.
+</div>
+
+ <!-- .element: style="font-size: 70%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Getting icons
+```CSharp 
+static Texture2D GetIconForObject(Object forObject)
+{
+	if (forObject == null)
+		return null;
+
+	if (forObject is ScriptableObject || forObject is MonoBehaviour 
+		|| forObject is GameObject || forObject is MonoScript)
+	{
+		
+#if Unity_2021_2_OR_NEWER
+		var icon = EditorGUIUtility.GetIconForObject(forObject);
+#else
+		var mi = typeof(EditorGUIUtility).GetMethod("GetIconForObject", BindingFlags.NonPublic | BindingFlags.Static);
+		var icon = mi.Invoke(null, new object[] { forObject }) as Texture2D;
+#endif
+		if (icon)
+			return icon;
+		
+		if (forObject is MonoBehaviour)
+			return EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin 
+				? "d_cs Script Icon" : "cs Script Icon").image as Texture2D;
+	}
+
+	return (Texture2D)EditorGUIUtility.ObjectContent(forObject, forObject.GetType()).image;
+}
+```
+<!-- .element: style="font-size: 25%" -->
+<div class="block">
+
+For types supporting custom icons we call `EditorGUIUtility.GetIconForObject`, scripts have a special icon, and finally if we can't find an icon, use `EditorGUIUtility.ObjectContent` to find a fallback.
+
+Again in Unity 2021.1 `EditorGUIUtility.GetIconForObject()` is public, but in previous version we'll need to access it via reflection.
+</div>
+
+ <!-- .element: style="font-size: 70%" -->
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Keyboard shortcuts
+``` CSharp
+[Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
+private static void QuickSearchMembers() => OpenQuickSearch(false);
+
+[Shortcut("Help/Quick Search/Components in children", KeyCode.Backslash, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
+private static void QuickSearchChildren() => OpenQuickSearch(true);
+```
+<!-- .element: style="font-size: 28%" -->
+``` CSharp
+private static void OpenQuickSearch(bool _includeChildren)
+{
+	if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
+	{
+	#if Unity_2021_1_OR_NEWER
+		var context = new SearchContext(new[] { BuildProvider(_includeChildren) }, " ", 
+			SearchFlags.Sorted|SearchFlags.NoIndexing);
+		var state = new SearchViewState(context, 
+			SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
+		state.position.width = 900;
+		state.position.height = 550;
+		state.title = !_includeChildren ? "Components" : "Component in children";
+		SearchService.ShowWindow(state);
+	#else
+		// Open Search with only the "Asset" provider enabled.
+		var qs = QuickSearch.OpenWithContextualProvider(new[]
+		{
+			_includeChildren ? providerWithChildrenId : providerId
+		});
+
+		qs.SetSearchText(" ");
+	#endif
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Keyboard shortcuts
+``` CSharp
+[Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
+private static void QuickSearchMembers() => OpenQuickSearch(false);
+
+[Shortcut("Help/Quick Search/Components in children", KeyCode.Backslash, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
+private static void QuickSearchChildren() => OpenQuickSearch(true);
+```
+<!-- .element: style="font-size: 28%" -->
+Adding new keyboard shortcuts is thankfully quite easy using the `[Shortcut]` method attribute.  
+
+We bind one for each type of search.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Keyboard shortcut to open specific search 
+``` CSharp
+private static void OpenQuickSearch(bool _includeChildren)
+{
+	if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
+	{
+	#if Unity_2021_1_OR_NEWER
+		var context = new SearchContext(new[] { BuildProvider(_includeChildren) }, " ", 
+			SearchFlags.Sorted|SearchFlags.NoIndexing);
+		var state = new SearchViewState(context, 
+			SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
+		state.position.width = 900;
+		state.position.height = 550;
+		state.title = !_includeChildren ? "Components" : "Component in children";
+		SearchService.ShowWindow(state);
+	#else
+		// Open Search with only the "Asset" provider enabled.
+		var qs = QuickSearch.OpenWithContextualProvider(new[]
+		{
+			_includeChildren ? providerWithChildrenId : providerId
+		});
+
+		qs.SetSearchText(" ");
+	#endif
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+<div class="block">
+
+Opening the search window is different in the old vs new search API.
+
+The old API was actually easier, but the new version lets us customize the UX, allowing us to hide features that aren't useful for our search.
+</div>
+
+ <!-- .element: style="font-size: 70%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Inspector header search button 
+
+``` CSharp
+[InitializeOnLoadMethod]
+static void InitializeOnLoad()
+{
+	Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+}
+```
+<!-- .element: style="font-size: 28%" -->
+``` CSharp
+static void DrawHeaderGUI(Editor _obj)
+{
+	if (!(_obj.target is GameObject))
+		return;
+
+	using (new GUILayout.HorizontalScope())
+	{
+		GUILayout.FlexibleSpace();
+		if (GUILayout.Button(new GUIContent("Search Components...", 
+			"Search components in this gameobject and it's children (alt+\\)"), 
+			GUILayout.ExpandWidth(false)))
+		{
+			var prev = Selection.objects;
+			Selection.objects = _obj.targets;
+			OpenQuickSearch(false);
+			Selection.objects = prev;
+		}
+		if (GUILayout.Button(new GUIContent("Search Components in children...", 
+			"Search components in this gameobject and it's children (alt+shift+\\)"), 
+			GUILayout.ExpandWidth(false)))
+		{
+			var prev = Selection.objects;
+			Selection.objects = _obj.targets;
+			OpenQuickSearch(true);
+			Selection.objects = prev;
+		}
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Inspector header search buttons
+
+``` CSharp
+[InitializeOnLoadMethod]
+static void InitializeOnLoad()
+{
+	Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+As with the URL link buttons earlier, we bind our GUI method to `Editor.finishedDefaultHeaderGUI` to draw it whenever the inspector is drawn.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Inspector header search buttons
+
+``` CSharp
+static void DrawHeaderGUI(Editor _obj)
+{
+	if (!(_obj.target is GameObject))
+		return;
+
+	using (new GUILayout.HorizontalScope())
+	{
+		GUILayout.FlexibleSpace();
+		if (GUILayout.Button(new GUIContent("Search Components...", 
+			"Search components in this gameobject and it's children (alt+\\)"), 
+			GUILayout.ExpandWidth(false)))
+		{
+			var prev = Selection.objects;
+			Selection.objects = _obj.targets;
+			OpenQuickSearch(false);
+			Selection.objects = prev;
+		}
+		if (GUILayout.Button(new GUIContent("Search Components in children...", 
+			"Search components in this gameobject and it's children (alt+shift+\\)"), 
+			GUILayout.ExpandWidth(false)))
+		{
+			var prev = Selection.objects;
+			Selection.objects = _obj.targets;
+			OpenQuickSearch(true);
+			Selection.objects = prev;
+		}
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+Just adding a button for each search type if the object is a `GameObject`.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Done. 
+Ok so lets break something else in the inspector and call it a day.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## A primer on ripping Unity open
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Disassembly
+* A common theme in this talk will be that we're after things that aren't in the public API.
+* While you have access to source code for Unity's packages. The internal/private contents of `UnityEditor.dll` and `UnityEngine.dll` are more opaque... right?
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Nope. 
+* We've got full debug symbols and info for them, so using a disassembler we can browse them as if they were uncompiled source.
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Disassemblers
+* I personally have used ILSpy(free), DotPeek (free) and Rider (a full IDE that effectively has DotPeek inside it).
+* I'll explain how to use DotPeek/Rider in this talk (as DotPeek is free) but if you prefer another one, go for it.
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Setup
+* DotPeek.
+	* Open up the editor
+	* Load `UnityEditor.dll` and `UnityEngine.dll` from  `{UnityInstallPath}\Editor\Managed`
+* Rider
+	* Just open the Unity project.
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Navigation
+* Works the same between Rider/DotPeek.
+* press Ctrl+T to symbol search for classes, methods and variables
+* press F12 or ctrl+click to follow a symbol to its declaration (or to find usages if it is a declaration)
+* press Alt+\\ to symbol search for members inside the current file/class
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### How to go "disassembly diving"
+We've got access to Unity's source (the non-native parts anyway), but there's too much to just jump in and start reading.
+
+You need to be looking for something specific, find something related to it and follow connections until you find what you're after.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 1. Figure out what you're after
+Usually this is something like "I need to find where/how this is implemented."
+
+It helps to be specific, trying to find the exact line or function used to do something is a lot easier than finding everything about a feature.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 2. Think of starting points
+
+You're after the names of classes or methods that will relate to what you're after, as these are easy to uncover by name. 
+
+If the thing you're after interacts with the GUI, that's usually a very good place to start. 
+
+Some starting points will be duds! So it helps to think up many (and more as you go)
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 3. Search from for your starting point
+<div class="block">
+
+Start searching through symbol names (mainly classes/methods) relating to your start point. 
+
+Skim read the code at each to see if it relates to what you're interested in. Move on quickly if it doesn't, it's easy to get bogged down.
+
+Know when to call it quits on a particular start point. Some may be harder to find than others or not relate to what you're after.
+</div>
+
+ <!-- .element: style="font-size: 80%" -->
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 4. Go deeper
+
+When you find something related to what you're after, follow the symbols for methods it uses to try to get closer to the code you're after.
+
+Use the same process as before. Pick start points from what's there, skim them, go deeper if you think they get you closer.  
+
+Repeat this process till you either find what you're after or it's time to give up on this lead and try another.
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 5. You found it! Now what?
+
+Congrats! Now the real work begins.
+
+The next part depends on the code and also what you're trying to do. Usually you're either trying to replicate what this code does elsewhere, or to modify something that this code does.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 5-1 Replication : Copy
+
+Replication is the easier problem
+
+Sometimes you're lucky, and the code doesn't rely on any hidden/private stuff so you can just copy/paste their code.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 5-1 Replication : Invoke
+
+Alternatively if they have a method that does part or all of what you want, you can just call it via reflection
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### 5-2 Modification
+
+If you want to change the way their code does something that's trickier. 
+
+You want to look through how it works, and see if there's any way to call methods or mess with variables to get it to do what you're after.
+
+In some cases, replicating the code and modifying your version is a good way to go
+
+But if you -must- change the contents of -their- method. There is a way...
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Runtime Assembly patching
+
+We can effectively modify existing methods at runtime.  This is how Unity games usually get modded. 
+
+This can be done without extra dependencies but I recommend using a library called Harmony for this (https://github.com/pardeike/Harmony).
+
+All you need to do is add 0Harmony.dll to your project and set its platforms to only "Editor".
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony prefix/postfix
+
+With harmony it's very easy to add prefix and postfix code to an existing method. 
+
+Prefixes code can return early in order to prevent the original method acting at all.
+
+Postfix code lets you manipulate the result, useful for modifying return values.
+
+You can even add multiple pre/postfixes to a method for different things
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony transcoding
+
+If you *absolutely* must modify lines in a method, Harmony allows you to 'transcode' the method's contents.
+
+It gives you an array of the method's existing IL for you to modify which becomes the patched method.
+
+I've only needed to do this once, and it's really not fun. But it's there if you don't have any other ways.
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Applied ripping and tearing
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### What we're after - Deep Links
+Let's figure out how Unity opens deep links (links from browser). 
+
+Our goal is to find a way to use deep links sent to the Unity editor to trigger our own code.
+
+If you open an asset store link in the browser, it opens that link in the package manger window in Unity. 
+
+We also know from the browser that the links use the URI prefix `com.Unity3d.kharma` 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Starting Points
+
+For our deep links example starting points that come to mind are:
+
+* Methods that open the package manager.
+* Methods that contain "URL" in their name
+
+Hopefully the URL gets passed by a callback or it gets stored somewhere we can read it.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Searching for clues
+
+We start by looking for the package manager window's class. 
+
+Searching for classes containing "PackageManager" we find `PackageManagerWindow`. 
+
+So we browse the source for it and search its members for methods containing "Open" and find several methods... but one is named `OpenURL(string URL)`. 
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive deeper
+
+<split even>
+<div class="block">
+
+`OpenURL()` sounds like we're on the right track. 
+<br><br><br>
+It gets the full link and uses it to open the package manager window.
+</div>
+
+
+
+``` CSharp
+[UsedByNativeCode]
+internal static void OpenURL(string URL)
+{
+	if (string.IsNullOrEmpty(URL))
+		return;
+	if (URL.StartsWith("com.Unity3d.kharma:upmpackage/"))
+	{
+		SelectPackageAndFilterStatic(
+			string.Empty, 
+			new PackageFilterTab?(PackageFilterTab.InProject));
+
+		EditorApplication.delayCall += () => OpenAddPackageByName(URL);
+	}
+	else
+	{
+		int num = URL.LastIndexOf('/');
+		if (num > 0)
+		{
+			string packageToSelect = URL.Substring(num + 1);
+			int length = packageToSelect.IndexOf('?');
+			if (length > 0)
+				packageToSelect = packageToSelect.Substring(0, length);
+			
+			SelectPackageAndFilterStatic(
+				packageToSelect,
+				new PackageFilterTab?(PackageFilterTab.AssetStore));
+		}
+	}
+}
+```
+<!-- .element: style="font-size: 25%" -->
+</split>
+
+</split>
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive deeper 2
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Pasted image 20230916195318.png" alt="" style="object-fit: scale-down">
+
+A usages search of `OpenURL()` reveals it's not getting called by any other managed methods.  
+
+This checks out as it has the  `[UsedByNativeCode]` attribute.
+
+So this method is being called by Unity native code and is the only place we can get the link URL.
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Found it, now what?
+
+So we have `PackageMangerWindow.OpenURL` as the only place that gets the URL we're after.
+
+Replicating isn't going to help us, as we want the URL being passed into this method.
+
+We're going to have to modify the method so that we can use the URL ourselves if it's one we care about. 
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony patch
+
+``` CSharp
+public static class Patcher
+{
+    [InitializeOnLoadMethod]
+    static void InitializeOnLoad()
+    {
+        var harmony = new Harmony("com.cratesmith.URLhook");
+        harmony.PatchAll(); // apply all HarmonyPatches in this assembly 
+    }
+}
+```
+<!-- .element: style="font-size: 30%" -->
+``` CSharp
+[HarmonyPatch]
+public static class OpenURLPatch
+{
+    public static List<Func<string, bool>> Listeners { get; } 
+	    = new List<Func<string, bool>>();   
+
+    static bool Prefix(ref string URL)
+    {
+        foreach (var listener in Listeners)
+        {
+            if (listener?.Invoke(URL) == true)
+                return false; // don't run original method
+        }
+        return true; // run original method
+    }
+```
+<!-- .element: style="font-size: 30%" -->
+``` CSharp
+    static MethodBase TargetMethod()
+    {
+        var typeName = "UnityEditor.PackageManager.UI.PackageManagerWindow";
+        var methodName = "OpenURL";
+        return AccessTools.Method($"{typeName}:{methodName}");
+    }
+}
+```
+<!-- .element: style="font-size: 40%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony Patch - Patcher
+
+
+``` CSharp
+public static class Patcher
+{
+    [InitializeOnLoadMethod]
+    static void InitializeOnLoad()
+    {
+        var harmony = new Harmony("com.cratesmith.URLhook");
+        harmony.PatchAll(); // apply all HarmonyPatches in this assembly 
+    }
+}
+```
+<!-- .element: style="font-size: 40%" -->
+
+The easiest way to write a patch is to make a static class with the  `HarmonyPatch`. 
+
+To apply all `[HarmonyPatch]` classes in the current assembly we create a `Harmony` instance and call `PatchAll()` on it. 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony - Prefix
+
+``` CSharp
+[HarmonyPatch]
+public static class OpenURLPatch
+{
+    public static List<Func<string, bool>> Listeners { get; } 
+	    = new List<Func<string, bool>>();   
+
+    static bool Prefix(ref string URL)
+    {
+        foreach (var listener in Listeners)
+        {
+            if (listener?.Invoke(URL) == true)
+                return false; // don't run original method
+        }
+        return true; // run original method
+    }
+```
+<!-- .element: style="font-size: 35%" -->
+
+<div class="block">
+
+We give our patch a  `Prefix()`  method that will be called before the method the patch is applied to. 
+
+We just pass the URL through our list of listeners and if any return true, we stop and prevent the original method from running.
+
+Otherwise we return true to permit the original method to run
+</div>
+
+ <!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Harmony - Patch Target 
+
+``` CSharp
+    static MethodBase TargetMethod()
+    {
+        var typeName = "UnityEditor.PackageManager.UI.PackageManagerWindow";
+        var methodName = "OpenURL";
+        return AccessTools.Method($"{typeName}:{methodName}");
+    }
+}
+```
+<!-- .element: style="font-size: 40%" -->
+
+Finally we specify the method this patch is applied to with `TargetMethod()`.
+
+`AccessTools` is Harmony's collection of helper methods for looking up reflection. 
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Link: Stolen
+
+All we need to do to use deep links now is add listeners to our `OpenURLPatch` class that listen to URLs sent to the Unity editor.
+
+There's a lot of uses for this, but for now lets just make a tool that lets us create deep links for selecting assets in the project.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Select asset link / GUID header
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/GUID and copy link.png" alt="" style="object-fit: scale-down">
+
+
+What we're after is a header on top of the inspector that lets us copy a deep link to select this asset.
+
+It also makes sense to show the GUID we'll use for the link in a way users can right-click-copy.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Building that thing
+
+``` CSharp
+public static class AssetURLHeaderGUI
+{
+	const string URLPrefix  = "com.Unity3d.kharma://selectguid/?";
+	
+	[InitializeOnLoadMethod]
+	public static void InitializeOnLoad()
+	{
+		Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+		OpenURLPatch.Listeners.Add(OnURL);
+	}
+```
+<!-- .element: style="font-size: 20%" -->
+``` CSharp
+	static bool OnURL(string _URL)
+	{
+		if (!_URL.StartsWith(URLPrefix, StringComparison.OrdinalIgnoreCase))
+			return false;
+
+		var guid = _URL.Substring(URLPrefix.Length);
+		var path = AssetDatabase.GUIDToAssetPath(guid);
+		if (string.IsNullOrEmpty(path))
+			Debug.LogError($"Link error: asset with guid:{guid}");
+		else
+		{
+			var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+			Selection.activeObject = asset;
+			EditorGUIUtility.PingObject(asset);
+		}
+		return true;
+	}
+```
+<!-- .element: style="font-size: 20%" -->
+``` CSharp
+	static void DrawHeaderGUI(Editor _editor)
+	{
+		if (_editor.targets.Length != 1)
+			return;
+
+		var path = AssetDatabase.GetAssetPath(_editor.target);
+		if (string.IsNullOrEmpty(path))
+			return;
+
+		var guid = AssetDatabase.AssetPathToGUID(path);
+
+		GUILayout.BeginHorizontal();
+
+		using (new EditorGUI.DisabledScope(true))
+			EditorGUILayout.TextField("GUID", guid);
+		
+		if (GUILayout.Button("Copy Link", GUILayout.ExpandWidth(false)))
+			GUIUtility.systemCopyBuffer = $"{URLPrefix}{guid}";
+		
+		GUILayout.EndHorizontal();
+	}
+}
+```
+<!-- .element: style="font-size: 20%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Building that thing 1
+
+``` CSharp
+public static class AssetURLHeaderGUI
+{
+	const string URLPrefix  = "com.Unity3d.kharma://selectguid/?";
+	
+	[InitializeOnLoadMethod]
+	public static void InitializeOnLoad()
+	{
+		Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+		OpenURLPatch.Listeners.Add(OnURL);
+	}
+```
+<!-- .element: style="font-size: 40%" -->
+
+Here we register callbacks for the inspector header GUI & the URL hook we made just before.
+
+And we define the prefix for URLs this code will create/handle.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Building that thing 2
+
+``` CSharp
+	static bool OnURL(string _URL)
+	{
+		if (!_URL.StartsWith(URLPrefix,
+			 StringComparison.OrdinalIgnoreCase))
+			return false;
+	
+		var guid = _URL.Substring(URLPrefix.Length);
+		var path = AssetDatabase.GUIDToAssetPath(guid);
+		if (string.IsNullOrEmpty(path))
+			Debug.LogError($"Link error: asset with guid:{guid}");
+		else
+		{
+			var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+			Selection.activeObject = asset;
+			EditorGUIUtility.PingObject(asset);
+		}
+		return true;
+	}
+```
+<!-- .element: style="font-size: 40%" -->
+
+This handles the URL hook we made. If the URL matches our prefix, we trim that off to get the asset's GUID. 
+
+If successful we select and ping the asset.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Building that thing 3
+
+``` CSharp
+	static void DrawHeaderGUI(Editor _editor)
+	{
+		if (_editor.targets.Length != 1)
+			return;
+
+		var path = AssetDatabase.GetAssetPath(_editor.target);
+		if (string.IsNullOrEmpty(path))
+			return;
+
+		var guid = AssetDatabase.AssetPathToGUID(path);
+
+		GUILayout.BeginHorizontal();
+
+		using (new EditorGUI.DisabledScope(true))
+			EditorGUILayout.TextField("GUID", guid);
+		
+		if (GUILayout.Button("Copy Link", GUILayout.ExpandWidth(false)))
+			GUIUtility.systemCopyBuffer = $"{URLPrefix}{guid}";
+		
+		GUILayout.EndHorizontal();
+	}
+}
+```
+<!-- .element: style="font-size: 35%" -->
+This draws the header GUI, which is only shown for assets. (Only assets have a path or GUID)
+<!-- .element: style="font-size: 80%" -->
+Clicking the button builds the link by adding our URL prefix to the GUID string and puts it on the clipboard.
+<!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### That wasn't so complex was it?
+
+Let's go find something else to break.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Filtering the inspector
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Lack of filtering for the inspector
+* Sometimes you're not entirely sure what component you're after. 
+
+* You need to find where a color or material is being set, or you remember you need to set a position but you can't remember what on.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Lack of filtering for the inspector 2
+
+* If only there was a way to add a search box to the inspector that would filter the view to items that match your search. (like y'know... other engines have)
+
+* Conventional wisdom is that to do this would require writing a full custom inspector.
+  
+* Convention? wisdom? Pfft. Lets do some crimes instead.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### What we're after
+
+<split gap="2">
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - searchbox.png" alt="" style="width: 300px; object-fit: fill">
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - by field.png" alt="" style="width: 300px; object-fit: fill">
+
+</split>
+Basically what the filter on the the project/hierarchy window already does, but for inspector fields
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Hacking in an inspector filter
+
+While there's no way to do a perfect per-property filter for the inspector (too many custom inspectors).
+
+We can however make a decent one that hides the fields that it can, and hides the whole component if no properties match the search.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: Where do we start?
+
+We've got one good place to begin `Editor.OnInspectorGUI()` 
+
+It's the method that custom inspectors override to change what's drawn. 
+
+So the default inspector draw function is either in its default implementation, or in something that calls it.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: OnInspectorGUI
+
+Checking out `Editor.OnInspectorGUI()`  in the disassembler reveals
+<!-- .element: style="font-size: 80%" -->
+``` CSharp
+/// <summary>  
+/// <para>Implement this function to make a custom inspector.</para>  
+/// </summary>
+public virtual void OnInspectorGUI() => this.DrawDefaultInspector();
+```
+<!-- .element: style="font-size: 30%" -->
+
+And following that 
+<!-- .element: style="font-size: 80%" -->
+``` CSharp
+public bool DrawDefaultInspector() => this.DoDrawDefaultInspector();
+
+ internal static bool DoDrawDefaultInspector(SerializedObject obj)
+    {
+      EditorGUI.BeginChangeCheck();
+      obj.UpdateIfRequiredOrScript();
+      SerializedProperty iterator = obj.GetIterator();
+      for (bool enterChildren = true; iterator.NextVisible(enterChildren); enterChildren = false)
+      {
+        using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
+          EditorGUILayout.PropertyField(iterator, true);
+      }
+      obj.ApplyModifiedProperties();
+      return EditorGUI.EndChangeCheck();
+    }
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: OnInspectorGUI 2
+
+This gives us a few things to go on.
+
+``` CSharp
+ internal static bool DoDrawDefaultInspector(SerializedObject obj)
+    {
+      EditorGUI.BeginChangeCheck();
+      obj.UpdateIfRequiredOrScript();
+      SerializedProperty iterator = obj.GetIterator();
+      for (bool enterChildren = true; iterator.NextVisible(enterChildren); enterChildren = false)
+      {
+        using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
+          EditorGUILayout.PropertyField(iterator, true);
+      }
+      obj.ApplyModifiedProperties();
+      return EditorGUI.EndChangeCheck();
+    }
+```
+<!-- .element: style="font-size: 35%" -->
+
+* We've found where default inspector properties are drawn. 
+* All properties are being drawn with `EditorGUILayout.PropertyField()`
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: OnInspectorGUI 3
+
+While we could patch `DoDrawDefaultInspector()` this would only work for default inspectors. 
+
+But we could patch the `OnInspectorGUI()` method for `Editor` and all derived classes to draw nothing if a filter isn't met.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing a gui header
+
+```CSharp
+public static class InspectorFilterGUI
+{	
+	public static string[] SearchSplits { get; set; } = new string[0];
+
+	public static string FilterText { get; private set; } = "";
+
+	[InitializeOnLoadMethod]
+	static void InitializeOnLoad()
+	{
+		EditorApplication.delayCall += () => Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+	}
+	
+	static void DrawHeaderGUI(Editor _obj)
+	{
+		if (!_obj.target || _obj.target is AssetImporter)
+			return;
+		
+		Patcher.PatchIfNeeded();
+		
+		FilterText = EditorGUILayout.TextField(FilterText);
+		SearchSplits = FilterText.Split(' ');
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+```	CSharp
+	public static bool Filter(string _string)
+	{
+		if (string.IsNullOrWhiteSpace(FilterText))
+			return true;
+		
+		foreach (var split in InspectorFilterGUI.SearchSplits)
+		{
+			if (split.Length == 0) continue;
+			if (_string.IndexOf(split, StringComparison.OrdinalIgnoreCase) >= 0)
+				return true;
+		}
+		return false;
+	}
+}
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing a gui header 2
+
+The header just draws a textfield. 
+<!-- .element: style="font-size: 80%" -->
+```CSharp
+public static class InspectorFilterGUI
+{
+	public static string[] SearchSplits { get; set; } = new string[0];
+
+	public static string FilterText { get; private set; } = "";
+
+	[InitializeOnLoadMethod]
+	static void InitializeOnLoad()
+	{
+		EditorApplication.delayCall += () => Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+	}
+	
+	static void DrawHeaderGUI(Editor _obj)
+	{
+		if (!_obj.target || _obj.target is AssetImporter)
+			return;
+		
+		Patcher.PatchIfNeeded();
+		
+		FilterText = EditorGUILayout.TextField(FilterText);
+		SearchSplits = FilterText.Split(' ');
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+
+And we also save the whitespace splits so we aren't calculating them each time we filter an item.
+<!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing a gui header 3 
+
+You might have noticed that we're calling `Patcher.PatchIfNeeded()` in the GUI callback.
+
+This is because some Unity GUI types throw exceptions if referenced outside of a GUI call. 
+
+Plus patching has a performance cost, and we don't need this patch until we see an inspector.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing a gui header 4
+``` CSharp
+	public static bool Filter(string _string)
+	{
+		if (string.IsNullOrWhiteSpace(FilterText))
+			return true;
+		
+		foreach (var split in InspectorFilterGUI.SearchSplits)
+		{
+			if (split.Length == 0) continue;
+			if (_string.IndexOf(split, StringComparison.OrdinalIgnoreCase) >= 0)
+				return true;
+		}
+		return false;
+	}
+}
+```
+<!-- .element: style="font-size: 35%" -->
+The filter method is just a simple 'split filter' (similar to the one in our component search provider before). 
+
+If the search string is blank, anything passes. 
+
+Otherwise the string passes if it contains any of the splits of the search string.
+
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch
+
+```CSharp
+public static class Patcher
+{
+	static Harmony s_Harmony;
+	
+	public static void PatchIfNeeded()
+	{
+		if (s_Harmony != null)
+			return;
+		s_Harmony = new Harmony("com.cratesmith.inspectorfilter");
+		s_Harmony.PatchAll();
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+``` CSharp
+[HarmonyPatch]
+public static class OnInspectorGUIPatch
+{
+	static bool Prefix(Editor __instance)
+	{
+		if (__instance.target is AssetImporter)
+			return true;
+
+ 		var iter = __instance.serializedObject.GetIterator();
+ 		iter.Next(true);
+ 		while (iter.NextVisible(true))
+ 		{
+ 			if (InspectorFilterGUI.Filter(iter.displayName))
+ 				return true;
+ 		}
+ 		
+ 		return false;
+	}
+```
+<!-- .element: style="font-size: 28%" -->
+``` CSharp
+	static IEnumerable<MethodBase> TargetMethods()
+	{ 
+		return AccessTools.AllTypes() 
+ 			.Where(type => !type.IsAbstract && typeof(Editor).IsAssignableFrom(type))
+ 			.Select(type => AccessTools.Method(type,nameof(Editor.OnInspectorGUI)));
+
+	}
+}
+```
+<!-- .element: style="font-size: 28%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 2
+
+As mentioned before we apply the patch on demand.
+
+```CSharp
+public static class Patcher
+{
+	static Harmony s_Harmony;
+	
+	public static void PatchIfNeeded()
+	{
+		if (s_Harmony != null)
+			return;
+		s_Harmony = new Harmony("com.cratesmith.inspectorfilter");
+		s_Harmony.PatchAll();
+	}
+}
+```
+<!-- .element: style="font-size: 35%" -->
+
+While this could be rolled into the header GUI... I always like to keep the `Harmony` instance and the `PatchAll()` call in their own class.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 3
+Our prefix method is quite simple. 
+
+``` CSharp
+[HarmonyPatch]
+public static class OnInspectorGUIPatch
+{
+	static bool Prefix(Editor __instance)
+	{
+		if (__instance.target is AssetImporter)
+			return true;
+
+ 		var iter = __instance.serializedObject.GetIterator();
+ 		iter.Next(true);
+ 		while (iter.NextVisible(true))
+ 		{
+ 			if (InspectorFilterGUI.Filter(iter.displayName))
+ 				return true;
+ 		}
+ 		
+ 		return false;
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+
+We iterate through all properties shown by this editor. If none match our `Filter()`, the original method is skipped.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 4
+
+Because patching a method doesn't patch overrides, we need to patch `OnInspectorGUI()` for each `Editor` class
+``` CSharp
+	static IEnumerable<MethodBase> TargetMethods()
+	{ 
+		return AccessTools.AllTypes() 
+ 			.Where(type => !type.IsAbstract && typeof(Editor).IsAssignableFrom(type))
+ 			.Select(type => AccessTools.Method(type,nameof(Editor.OnInspectorGUI)));
+	}
+}
+```
+<!-- .element: style="font-size: 35%" -->
+
+To do this we use `TargetMethods()` instead of `TargetMethod()` and write a query to get all `OnInspectorGUI()` methods from valid classes.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<div class="" style="position: absolute; left: 0%; top: 0%; height: 20%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+### That's it
+</div>
+
+<div class="" style="position: absolute; left: 10%; top: 10%; height: 60%; width: 30%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - by component.png" alt="" style="object-fit: scale-down">
+
+</div>
+
+<div class="" style="position: absolute; left: 40%; top: 0%; height: 80%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Or rather that's it for component filtering.
+
+We still want to filter properties if we can. 
+</div>
+
+<div class="" style="position: absolute; left: 0%; top: 70%; height: 20%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Our lead on that was that default inspector draws all properites with `EditorGUILayout.PropertyField()`
+</div>
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: PropertyField
+
+There are 4 overloads of `EditorGUILayout.PropertyField`
+
+``` CSharp
+public static bool PropertyField(
+      SerializedProperty property,
+      GUIContent label,
+      bool includeChildren,
+      params GUILayoutOption[] options)
+    {
+      return ScriptAttributeUtility
+	      .GetHandler(property)
+	      .OnGUILayout(property, label, includeChildren, options);
+    }
+```
+<!-- .element: style="font-size: 40%" -->
+
+But looking at them in the disassembler they all point to this one.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: PropertyField Pt 2
+
+That calls `PropertyHandler.OnGUILayout` 
+```CSharp
+    public bool OnGUILayout(
+      SerializedProperty property,
+      GUIContent label,
+      bool includeChildren,
+      params GUILayoutOption[] options)
+    {
+      Rect position = property.propertyType != SerializedPropertyType.Boolean 
+	      || this.propertyDrawer != null || this.m_DecoratorDrawers != null 
+	      && this.m_DecoratorDrawers.Count != 0 
+	      ? EditorGUILayout.GetControlRect(EditorGUI.LabelHasContent(label), 
+		      this.GetHeight(property, label, includeChildren), options) 
+	      : EditorGUILayout.GetToggleRect(true, options);
+      EditorGUILayout.s_LastRect = position;
+      return this.OnGUI(position, property, label, includeChildren);
+    }
+```
+<!-- .element: style="font-size: 40%" -->
+
+But a usages search shows that this is only called from one place:
+`EditorGUILayout.PropertyField`
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Dive: PropertyField Pt 3
+
+So to filter a property, we'll need to write a prefix that does nothing if the property doesn't match the filter.
+
+Both of these methods are good candidates, but `EditorGUILayout.PropertyField` is a little better as it's public:
+
+That makes it easier to write the patch, less likely to change.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 
+
+``` CSharp
+[HarmonyPatch(typeof(EditorGUILayout), 
+              nameof(EditorGUILayout.PropertyField),
+              new []{typeof(SerializedProperty),
+	              typeof(GUIContent),
+	              typeof(bool),
+	              typeof(GUILayoutOption[])})]
+public static class PropertyFieldPatch
+{
+```
+<!-- .element: style="font-size: 30%" -->
+```CSharp
+	public static bool Active { get; set; }
+	
+	static bool Prefix(SerializedProperty property,
+	                          ref GUIContent label,
+	                          bool includeChildren,
+	                          GUILayoutOption[] options,
+	                          ref bool __result)
+	{
+		if (!Active)
+			return true;
+		
+		var iter = property.Copy();
+		var end = property.GetEndProperty();
+		do
+		{
+			if (InspectorFilterGUI.Filter(property.displayName))
+			{
+				return true;
+			}
+			
+		} while (iter.NextVisible(true) 
+		         && !SerializedProperty.EqualContents(iter, end));
+		
+		__result = false;
+		return false;
+	}	
+}
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 2
+
+Because `EditorGUILayout.PropertyField()` is public, it's easier to specify the target method in the `HarmonyPatch` attribute
+
+``` CSharp
+[HarmonyPatch(typeof(EditorGUILayout), 
+              nameof(EditorGUILayout.PropertyField),
+              new []{typeof(SerializedProperty),
+	              typeof(GUIContent),
+	              typeof(bool),
+	              typeof(GUILayoutOption[])})]
+public static class PropertyFieldPatch
+{
+```
+
+However, because there are multiple overloads we have to specify the calling arguments of the version we want.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 3
+
+The patch is similar to the component filter patch.
+<!-- .element: style="font-size: 80%" -->
+```CSharp
+	public static bool Active { get; set; }
+	
+	static bool Prefix(SerializedProperty property,
+	                          ref GUIContent label,
+	                          bool includeChildren,
+	                          GUILayoutOption[] options,
+	                          ref bool __result)
+	{
+		if (!Active)
+			return true;
+		
+		var iter = property.Copy();
+		var end = property.GetEndProperty();
+		do
+		{
+			if (InspectorFilterGUI.Filter(property.displayName))
+			{
+				return true;
+			}
+			
+		} while (iter.NextVisible(true) 
+		         && !SerializedProperty.EqualContents(iter, end));
+		
+		__result = false;
+		return false;
+	}	
+}
+```
+<!-- .element: style="font-size: 30%" -->
+
+ In this case we filter based on the current property and it's children.
+<!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 4
+
+You might have noticed the check for `Active` in the patch. 
+
+This is because `PropertyField()` is not used just in the inspector, but we only want our patch to affect it there.
+
+
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Writing the patch 5
+To make this work we'll amend our previous patch to set `Active` true in the prefix, and false in the postfix.
+<!-- .element: style="font-size: 80%" -->
+```CSharp
+[HarmonyPatch]
+public static class OnInspectorGUIPatch
+{
+	static bool Prefix(Editor __instance)
+	{
+		if (__instance.target is AssetImporter)
+			return true;
+		
+		var iter = __instance.serializedObject.GetIterator();
+ 		iter.Next(true);
+ 		while (iter.NextVisible(true))
+ 		{
+	        if (InspectorFilterGUI.Filter(iter.displayName))
+	        {
+		        PropertyFieldPatch.Active = true;
+		        return true;
+	        }
+ 		}
+        return false;
+	}
+
+	static void Postfix()
+	{
+		PropertyFieldPatch.Active = false;
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+This ensures that our `PropertyField()` patch only affects fields inside an `OnInspectorGUI()` call.
+<!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Final tweaks
+
+Having a blank text field for the header UI won't intuitively be a search, so lets make it a search field instead.
+<!-- .element: style="font-size: 80%" -->
+<split gap="2">
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - textfield.png" alt="" style="width: 300px; object-fit: fill">
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - searchbox.png" alt="" style="width: 300px; object-fit: fill">
+
+</split>
+
+`EditorGUILayout.ToolbarSearchField()` may be internal...  but when has that ever stopped us?
+<!-- .element: style="font-size: 80%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Final twerks 2
+
+
+We just grab the method by reflection and cache it.
+
+``` CSharp
+public static class InspectorFilterGUI
+{
+	static MethodInfo s_ToolbarSearchField;
+	private static string SearchField(string value, params GUILayoutOption[] options)
+	{
+		if (s_ToolbarSearchField == null)
+		{
+			s_ToolbarSearchField = AccessTools.Method(typeof(EditorGUILayout), "ToolbarSearchField",
+											new [] {typeof(string), typeof(GUILayoutOption[])});
+		}
+		return s_ToolbarSearchField.Invoke(null, new[] { value, (object)options }) as string;
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+Then use it instead of `EditorGUILayout.TextArea()` in our header
+``` CSharp
+	static void DrawHeaderGUI(Editor _obj)
+	{
+		if (!_obj.target || _obj.target is AssetImporter)
+			return;
+		
+		Patcher.PatchIfNeeded();
+		
+		FilterText = SearchField(FilterText);
+		SearchSplits = FilterText.Split(' ');
+	}
+```
+<!-- .element: style="font-size: 30%" -->
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### Done
+<split gap="2">
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - searchbox.png" alt="" style="width: 300px; object-fit: fill">
+
+<img src="Side Projects/GCAP2023/Talk/Slides/Sections/Inspector filtering - by field.png" alt="" style="width: 300px; object-fit: fill">
+
+</split>
+
+We just did in a few minutes what Unity couldn't do in 15 years.
+
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+# Questions?
+
+<div class="" style="position: absolute; left: 0%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Slides: https://cratesmith.github.io/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left" -->
+</div> 
+
+<div class="" style="position: absolute; left: 50%; top: 100%; height: 6%; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+Code: https://github.com/Cratesmith/GCAP2023
+<!-- .element: style="font-size: 18px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-evenly" align="right" -->
+</div>
+</div></script></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+	var isLight = isLight(bgColor);
+
+	if(isLight){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		mermaid: {
+			theme: isLight ? 'default' : 'dark',
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":960,"height":700,"margin":0,"maxScale":"1.2","controls":true,"progress":true,"slideNumber":false,"transition":"slide","transitionSpeed":"default"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>
