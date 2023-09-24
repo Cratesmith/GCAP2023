@@ -1,17 +1,17 @@
-﻿#if false
+﻿#if true
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
 using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 #if UNITY_2021_1_OR_NEWER
 using UnityEditor.Search;
 using UnityEngine.Search;
 #else
+using System.Reflection;
+using UnityEditor.Experimental.SceneManagement;
 using Unity.QuickSearch;
 #endif
 using UnityEditor.ShortcutManagement;
@@ -20,74 +20,36 @@ using Object = UnityEngine.Object;
 
 namespace ComponentSearch
 {
-	public static class MemberSearchProvider
+	public static class ComponentSearchProvider
 	{
-		private const string providerId  = "components";
-		private const string displayName = "Coponents";
-		private const string filterId    = "\\:";
+		private const string componentProviderId           = "components";
+		private const string componentInChildrenProviderId = "componentsInChildren";
 
-		private const string displayNameWithChildren = "Components In Children";
-		private const string providerWithChildrenId  = "componentsInChildren";
-		private const string filterWithChildrenId    = "\\\\:";
+		[SearchItemProvider]
+		static SearchProvider CreateProviderSingle() => BuildProvider(false);
 
-		[InitializeOnLoadMethod]
-		static void InitializeOnLoad()
-		{
-			Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
-		}
-
-		static void DrawHeaderGUI(Editor _obj)
-		{
-			if (!(_obj.target is GameObject))
-				return;
-
-			using (new GUILayout.HorizontalScope())
-			{
-				GUILayout.FlexibleSpace();
-				if (GUILayout.Button(new GUIContent("Search Components...", "Search components in this gameobject and it's children (alt+\\)"), GUILayout.ExpandWidth(false)))
-				{
-					var prev = Selection.objects;
-					Selection.objects = _obj.targets;
-					OpenQuickSearch(false);
-					Selection.objects = prev;
-				}
-				if (GUILayout.Button(new GUIContent("Search Components in children...", "Search components in this gameobject and it's children (alt+shift+\\)"), GUILayout.ExpandWidth(false)))
-				{
-					var prev = Selection.objects;
-					Selection.objects = _obj.targets;
-					OpenQuickSearch(true);
-					Selection.objects = prev;
-				}
-			}
-		}
-
-		[UsedImplicitly, SearchItemProvider]
-		static SearchProvider CreateProviderSingle()
-			=> BuildProvider(false);
-
-		[UsedImplicitly, SearchItemProvider]
-		static SearchProvider CreateProviderWithChildren()
-			=> BuildProvider(true);
+		[SearchItemProvider]
+		static SearchProvider CreateProviderWithChildren() => BuildProvider(true);
 
 		static SearchProvider BuildProvider(bool _includeChildren)
 		{
-			return new SearchProvider(_includeChildren ? providerWithChildrenId : providerId,
-			                          _includeChildren ? displayNameWithChildren : displayName)
+			(var providerId, var displayName, var filterId) = _includeChildren 
+				? (componentInChildrenProviderId, "Components In Children", "\\\\:") 
+				: (componentProviderId,"Coponents", "\\:");
+			
+			return new SearchProvider(providerId, displayName)
 			{
-				filterId = _includeChildren ? filterWithChildrenId : filterId,
+				filterId = filterId,
 				showDetails = true,
 				isExplicitProvider = true,
 				showDetailsOptions = ShowDetailsOptions.Inspector | ShowDetailsOptions.Actions,
-				fetchItems = (context, items, provider) =>
-				{
-					return _FetchRoutine(context, items, provider, _includeChildren);
-				},
-				toObject = (item, type) => item.data as Object,
+				fetchItems = (context, items, provider) => FetchItemsRoutine(context, items, provider, _includeChildren),
+				toObject = (item, _) => item.data as Object,
 				startDrag = (item, context) => StartDrag(item, context),
-				fetchThumbnail = (item, context) => GetIconForObject(item.data as Object),
-				trackSelection = (_item, _context) => EditorGUIUtility.PingObject(_item.data as Object),
+				fetchThumbnail = (item, _) => GetIconForObject(item.data as Object),
+				trackSelection = (item, _) => EditorGUIUtility.PingObject(item.data as Object),
 #if UNITY_2021_1_OR_NEWER
-			actions = {	new SearchAction(providerId, "open", null, "Open asset...", OpenItem) }
+			actions = {	new SearchAction(componentProviderId, "open", null, "Open asset...", OpenItem) }
 #endif
 			};
 		}
@@ -143,7 +105,10 @@ namespace ComponentSearch
 			return path;
 		}
 
-		private static IEnumerable _FetchRoutine(SearchContext _context, List<SearchItem> _items, SearchProvider _provider, bool _includeChildren)
+		private static IEnumerable FetchItemsRoutine(SearchContext _context, 
+                 List<SearchItem> _items,
+                 SearchProvider _provider,
+                 bool _includeChildren)
 		{
 			var splits = _context.searchQuery.Split(' ');
 			var blankSearch = string.IsNullOrWhiteSpace(_context.searchQuery);
@@ -189,20 +154,18 @@ namespace ComponentSearch
 		}
 
 #if !UNITY_2021_1_OR_NEWER
-		[SearchActionsProvider, UsedImplicitly]
+		[SearchActionsProvider]
 		static IEnumerable<SearchAction> CreateActionHandlers()
 		{
-			return new[]
-			{
-				new SearchAction(providerId, "open", null, "Open asset...", OpenItem)
-			};
+			return new[] { new SearchAction(componentProviderId, "open", null, "Open asset...", OpenItem),
+				new SearchAction(componentInChildrenProviderId, "open", null, "Open asset...", OpenItem)};
 		}
 #endif
 
-		[UsedImplicitly, Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
+		[Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
 		private static void QuickSearchMembers() => OpenQuickSearch(false);
 
-		[UsedImplicitly, Shortcut("Help/Quick Search/Components in children", KeyCode.Backslash, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
+		[Shortcut("Help/Quick Search/Components in children", KeyCode.Backslash, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
 		private static void QuickSearchChildren() => OpenQuickSearch(true);
 
 		private static void OpenQuickSearch(bool _includeChildren)
@@ -210,17 +173,19 @@ namespace ComponentSearch
 			if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
 			{
 			#if UNITY_2021_1_OR_NEWER
-			var context = new SearchContext(new[] { BuildProvider(_includeChildren) }, " ", SearchFlags.Sorted|SearchFlags.NoIndexing|SearchFlags.Synchronous);
-			var state = new SearchViewState(context, SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
-			state.position.width = 900;
-			state.position.height = 550;
-			state.windowTitle = new GUIContent(!_includeChildren ? "Components" : "Component in children");
-			var qs = SearchService.ShowWindow(state);
+				var context = new SearchContext(new[] { BuildProvider(_includeChildren) }, " ", 
+					SearchFlags.Sorted|SearchFlags.NoIndexing);
+				var state = new SearchViewState(context, 
+					SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
+				state.position.width = 900;
+				state.position.height = 550;
+				state.title = !_includeChildren ? "Components" : "Component in children";
+				SearchService.ShowWindow(state);
 			#else
 				// Open Search with only the "Asset" provider enabled.
 				var qs = QuickSearch.OpenWithContextualProvider(new[]
 				{
-					_includeChildren ? providerWithChildrenId : providerId
+					_includeChildren ? componentInChildrenProviderId : componentProviderId
 				});
 
 				qs.SetSearchText(" ");
@@ -247,25 +212,56 @@ namespace ComponentSearch
 			if (forObject == null)
 				return null;
 
-			if (forObject is ScriptableObject || forObject is MonoBehaviour || forObject is GameObject || forObject is MonoScript)
+			if (forObject is ScriptableObject || forObject is MonoBehaviour 
+				|| forObject is GameObject || forObject is MonoScript)
 			{
+				
 #if UNITY_2021_2_OR_NEWER
 			var icon = EditorGUIUtility.GetIconForObject(forObject);
-			if (forObject is MonoBehaviour && !icon)
-				return EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin ? "d_cs Script Icon" : "cs Script Icon").image as Texture2D;
 #else
-				var ty = typeof(EditorGUIUtility);
-				var mi = ty.GetMethod("GetIconForObject", BindingFlags.NonPublic | BindingFlags.Static);
-				var icon = mi.Invoke(null, new object[]
-				{
-					forObject
-				}) as Texture2D;
-				if (forObject is MonoBehaviour && !icon)
-					return EditorGUIUtility.FindTexture("cs Script Icon");
+				var mi = typeof(EditorGUIUtility).GetMethod("GetIconForObject", BindingFlags.NonPublic | BindingFlags.Static);
+				var icon = mi.Invoke(null, new object[] { forObject }) as Texture2D;
 #endif
+				if (icon)
+					return icon;
+				
+				if (forObject is MonoBehaviour)
+					return EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin 
+						? "d_cs Script Icon" : "cs Script Icon").image as Texture2D;
 			}
 
-			return (Texture2D)EditorGUIUtility.ObjectContent(forObject, typeof(Mesh)).image;
+			return (Texture2D)EditorGUIUtility.ObjectContent(forObject, forObject.GetType()).image;
+		}
+		
+		[InitializeOnLoadMethod]
+		static void InitializeOnLoad()
+		{
+			Editor.finishedDefaultHeaderGUI += DrawHeaderGUI;
+		}
+
+		static void DrawHeaderGUI(Editor _obj)
+		{
+			if (!(_obj.target is GameObject))
+				return;
+
+			using (new GUILayout.HorizontalScope())
+			{
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button(new GUIContent("Search Components...", "Search components in this gameobject and it's children (alt+\\)"), GUILayout.ExpandWidth(false)))
+				{
+					var prev = Selection.objects;
+					Selection.objects = _obj.targets;
+					OpenQuickSearch(false);
+					Selection.objects = prev;
+				}
+				if (GUILayout.Button(new GUIContent("Search Components in children...", "Search components in this gameobject and it's children (alt+shift+\\)"), GUILayout.ExpandWidth(false)))
+				{
+					var prev = Selection.objects;
+					Selection.objects = _obj.targets;
+					OpenQuickSearch(true);
+					Selection.objects = prev;
+				}
+			}
 		}
 	}
 }

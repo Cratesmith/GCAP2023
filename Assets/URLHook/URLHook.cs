@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using UnityEditor;
-using UnityEngine;
 
 namespace URLHook
 {

@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using UnityEditor;
 #if UNITY_2021_1_OR_NEWER
 using UnityEditor.Search;
@@ -25,7 +24,7 @@ namespace ComponentSearchExample
 	{
 		private const string providerId = "components";
 
-		[UsedImplicitly, SearchItemProvider]
+		[SearchItemProvider]
 		static SearchProvider CreateProviderSingle()
 		{
 			return new SearchProvider(providerId, "Coponents")
@@ -146,7 +145,7 @@ namespace ComponentSearchExample
 #endif
 		}
 #if !UNITY_2021_1_OR_NEWER
-		[SearchActionsProvider, UsedImplicitly]
+		[SearchActionsProvider]
 		static IEnumerable<SearchAction> CreateActionHandlers() 
 			=> new[] { new SearchAction(providerId, 
 				"open", 
@@ -156,13 +155,13 @@ namespace ComponentSearchExample
 			};
 #endif
 
-		[UsedImplicitly, Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
+		[Shortcut("Help/Quick Search/Components", KeyCode.Backslash, ShortcutModifiers.Alt)]
 		private static void QuickSearchMembers()
 		{
 			if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
 			{
 			#if UNITY_2021_1_OR_NEWER
-				var context = new SearchContext(new[] { CreateProvider(_includeChildren) }, " ", 
+				var context = new SearchContext(new[] { CreateProviderSingle() }, " ", 
 												SearchFlags.Sorted
 												|SearchFlags.NoIndexing
 												|SearchFlags.Synchronous);
@@ -171,7 +170,7 @@ namespace ComponentSearchExample
 															| SearchViewFlags.ListView);
 				state.position.width = 900;
 				state.position.height = 550;
-				state.windowTitle = new GUIContent(!_includeChildren ? "Components" : "Component in children");
+				state.title = "Components";
 				var qs = SearchService.ShowWindow(state);
 			#else
 				// Open Search with only the "Asset" provider enabled.
@@ -208,11 +207,11 @@ namespace ComponentSearchExample
 					if (Selection.activeGameObject || PrefabStageUtility.GetCurrentPrefabStage())
 					{
 			#if UNITY_2021_1_OR_NEWER
-						var context = new SearchContext(new[] { CreateProvider(_includeChildren) }, " ", SearchFlags.Sorted|SearchFlags.NoIndexing|SearchFlags.Synchronous);
+						var context = new SearchContext(new[] { CreateProviderSingle() }, " ", SearchFlags.Sorted|SearchFlags.NoIndexing|SearchFlags.Synchronous);
 						var state = new SearchViewState(context, SearchViewFlags.OpenInspectorPreview|SearchViewFlags.DisableBuilderModeToggle|SearchViewFlags.ListView);
 						state.position.width = 900;
 						state.position.height = 550;
-						state.windowTitle = new GUIContent(!_includeChildren ? "Components" : "Component in children");
+						state.title = "Components";
 						var qs = SearchService.ShowWindow(state);
 			#else
 						// Open Search with only the "Asset" provider enabled.
