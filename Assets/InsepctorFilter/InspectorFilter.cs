@@ -1,4 +1,4 @@
-#if false
+#if true
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -123,7 +123,7 @@ namespace InsepctorFilter
 
 			Patcher.PatchIfNeeded();
 
-			FilterText = EditorGUILayout.TextField(FilterText);
+			FilterText = SearchField(FilterText);
 			SearchSplits = FilterText.Split(' ');
 		}
 

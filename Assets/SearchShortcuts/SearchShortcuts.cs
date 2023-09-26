@@ -10,6 +10,9 @@ public static class SearchShortcuts
 	[InitializeOnLoadMethod]
 	public static void InitializeOnLoad()
 	{
+		if (ShortcutManager.instance.IsProfileReadOnly(ShortcutManager.instance.activeProfileId))
+			return;
+		
 #if UNITY_2021_1_OR_NEWER
 		RebindIfMissing("Help/Search/Assets", 
 		                new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
