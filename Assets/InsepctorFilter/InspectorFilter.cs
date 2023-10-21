@@ -7,7 +7,7 @@ using HarmonyLib;
 using UnityEditor;
 using UnityEngine;
 
-namespace InsepctorFilter
+namespace InspectorFilter
 {
 	public static class Patcher
 	{
@@ -43,17 +43,36 @@ namespace InsepctorFilter
 			var end = property.GetEndProperty();
 			do
 			{
-				if (InspectorFilterGUI.Filter(property.displayName))
+				if (InspectorFilterGUI.Filter(iter.displayName))
 				{
 					return true;
 				}
 
-			} while (iter.NextVisible(true) && !SerializedProperty.EqualContents(iter, end));
-
+			} while (iter.NextVisible(true) 
+			         && !SerializedProperty.EqualContents(iter, end));
+			
 			__result = false;
 			return false;
 		}
 		public static bool Active { get; set; }
+	}
+	
+	[HarmonyPatch]
+	public static class GetOptimizedGUIBlockPatch
+	{
+		static bool Prefix(Editor __instance, bool isDirty, bool isVisible, out float height, ref bool __result)
+		{
+			height = -1f;
+			__result = false;
+			return String.IsNullOrWhiteSpace(InspectorFilterGUI.FilterText) || !isVisible;
+		}
+	
+		static IEnumerable<MethodBase> TargetMethods()
+		{
+			return AccessTools.AllTypes()
+				.Where(type => !type.IsAbstract && typeof(Editor).IsAssignableFrom(type))
+				.Select(type => AccessTools.Method(type, "GetOptimizedGUIBlock"));
+		}
 	}
 
 	[HarmonyPatch]
