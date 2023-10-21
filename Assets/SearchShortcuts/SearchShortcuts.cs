@@ -10,24 +10,35 @@ public static class SearchShortcuts
 	[InitializeOnLoadMethod]
 	public static void InitializeOnLoad()
 	{
+		EditorApplication.delayCall += DoRebind;
+	}
+
+	static void DoRebind()
+	{
 		if (ShortcutManager.instance.IsProfileReadOnly(ShortcutManager.instance.activeProfileId))
 			return;
-		
+
 #if UNITY_2021_1_OR_NEWER
-		RebindIfMissing("Help/Search/Assets", 
+		RebindIfMissing("Help/Search/Assets",
 		                new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
 
-		RebindIfMissing("Help/Search/Hierarchy", 
+		RebindIfMissing("Help/Search/Hierarchy",
 		                new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+		RebindIfMissing("Help/Search/Menu",
+		                new KeyCombination(KeyCode.M, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
 #else
 		RebindIfMissing("Help/Quick Search/Assets", 
 		                new KeyCombination(KeyCode.P, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
 
 		RebindIfMissing("Help/Quick Search/Scene", 
 		                new KeyCombination(KeyCode.H, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
+
+		RebindIfMissing("Help/Quick Search/Menu",
+		                new KeyCombination(KeyCode.M, ShortcutModifiers.Alt | ShortcutModifiers.Shift));
 #endif
-	} 
-	
+	}
+
 	static void RebindIfMissing(string _bindingId, KeyCombination _keyCombination)
 	{
 		var binding = ShortcutManager.instance.GetShortcutBinding(_bindingId);
