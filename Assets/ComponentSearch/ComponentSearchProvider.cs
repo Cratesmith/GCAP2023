@@ -96,7 +96,7 @@ namespace ComponentSearch
 			if (!_component)
 				return "";
 			var current = _component.transform;
-			var path = $":{current.GetType().Name}";
+			var path = $":{_component.GetType().Name}";
 			while (current != null)
 			{
 				path = $"/{current.name}{path}";
